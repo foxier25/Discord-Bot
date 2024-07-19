@@ -220,6 +220,7 @@ async def top(ctx, *args):
     my_embed.add_field(name="Symbol", value=respond_symbols, inline=True)
     my_embed.add_field(name="Price", value=respond_prices, inline=True)
     my_embed.add_field(name="Market cap", value=respond_market_cap, inline=True)
+    my_embed.add_field(name='Down(%)', value='{:,.2f}'.format(ath_percentage_down) + '%', inline=True)
     my_embed.set_footer(text="Source: coingecko.com ☛ " + date_now)
 
     await ctx.send(embed=my_embed)
@@ -257,4 +258,5 @@ async def botinfo(ctx, *args):
 
 TOKEN = os.environ["TOKEN_SECRET"]
 
+keep_alive()
 client.run(TOKEN)
