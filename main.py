@@ -84,6 +84,35 @@ async def daychange(ctx, symbol):
         await ctx.send("Either you sent wrong symbol or currency is not in top 100")
 
 
+@client.command()
+async def ath(ctx, symbol):
+    url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+    data = requests.get(url).json()
+    not_found = True
+
+    for crypto in data:
+        if symbol.lower() == crypto["symbol"]:
+            not_found = False
+            ath = crypto["ath"]
+            ath_date = crypto["ath_date"]
+            day = ath_date[8] + ath_date[9]
+            month = ath_date[5] + ath_date[6]
+            year = ath_date[0] + ath_date[1] + ath_date[2] + ath_date[3]
+            ath_percentage_down = crypto["ath_change_percentage"]
+            print(
+                "ATH for {} is at {:,}, on {}.{}.{}, which is {:.2f}% down".format(
+                    symbol.upper(), ath, day, month, year, ath_percentage_down
+                )
+            )
+            await ctx.send(
+                "ATH for {} is at {:,}, on {}.{}.{}, which is {:.2f}% down".format(
+                    symbol.upper(), ath, day, month, year, ath_percentage_down
+                )
+            )
+    if not_found:
+        await ctx.send("Either you sent wrong symbol or currency is not in top 100")
+
+
 TOKEN = os.environ["TOKEN_SECRET"]
 
 client.run(TOKEN)
