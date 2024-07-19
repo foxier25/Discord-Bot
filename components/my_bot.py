@@ -34,4 +34,6 @@ class MyBot(commands.Bot):
     async def on_ready(self) -> None:
         print(f"you have logged in as {self.user} !")
 
-    
+    async def on_commnad_error(self, ctx: Context, error: CommandError) -> None:
+        if isinstance(error, commands.errors.CommandNotFound):
+            await ctx.send("Command not found")
