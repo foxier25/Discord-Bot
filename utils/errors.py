@@ -20,3 +20,13 @@ async def unexpected_error(interaction: Interaction) -> None:
     )
 
     await interaction.followup.send(embed=my_embed)
+
+
+async def wrong_topn_number(interaction: Interaction) -> None:
+    my_embed = Embed(colour=Colour.red())
+
+    my_embed.add_field(
+        name="⛔Wrong number", value="Number of coins must be between 1 and 30"
+    )
+
+    await interaction.followup.send(embed=my_embed)
