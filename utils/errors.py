@@ -9,3 +9,14 @@ async def coin_not_found(interaction: Interaction) -> None:
     )
 
     await interaction.followup.send(embed=my_embed)
+
+
+async def unexpected_error(interaction: Interaction) -> None:
+    my_embed = Embed(colour=Colour.red())
+
+    my_embed.add_field(
+        name="⛔Unexpected error",
+        value="An unexpected error has occured. Please contact the admin",
+    )
+
+    await interaction.followup.send(embed=my_embed)
