@@ -1,5 +1,6 @@
 import logging
 from pkgutil import iter_modules
+from typing import Coroutine
 
 from discord import Intents, Activity, ActivityType, Status
 from discord.ext import commands
@@ -20,3 +21,17 @@ class MyBot(commands.Bot):
             activity=activity,
             status=Status.online,
         )
+
+    async def setup_hook(self) -> None:
+        extensions = [m.name for m in iter_modules(["cogs"], prefix="cogs")]
+        for extension in extensions:
+            try:
+                await self.load_extension(extensions)
+            except Exception as e:
+                logging.exception(e)
+                print(f"Extension not found {e}")
+
+    async def on_ready(self) -> None:
+        print(f"you have logged in as {self.user} !")
+
+    
