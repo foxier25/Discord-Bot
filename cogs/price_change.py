@@ -18,7 +18,6 @@ class PriceChange(Cog):
     @app_commands.command(
         name="price_change", description="Price change over the period of time"
     )
-
     @app_commands.describe(coin_symbol="Coin symbol")
     async def price_change(self, interaction: Interaction, coin_symbol: str):
         await interaction.response.defer()
@@ -53,6 +52,8 @@ class PriceChange(Cog):
         coin_day_change = data["market_data"]["price_change_24h"]
         coin_day_change_percentage = data["market_data"]["price_change_percentage_24h"]
         coin_7d_change_percentage = data["market_data"]["price_change_percentage_7d"]
+        coin_14d_change_percentage = data["market_data"]["price_change_percentage_14d"]
+        coin_30d_change_percentage = data["market_data"]["price_change_percentage_30d"]
         if coin_day_change > 0:
             response_price = f"`+{coin_day_change:,}$`"
             response_percentage = f"`+{coin_day_change_percentage:,.2f}%`"
@@ -64,6 +65,16 @@ class PriceChange(Cog):
             response_7d_percentage = f"`+{coin_7d_change_percentage:,.2f}%`"
         else:
             response_7d_percentage = f"`{coin_7d_change_percentage:,.2f}%`"
+
+        if coin_14d_change_percentage > 0:
+            response_14d_percentage = f"`+{coin_14d_change_percentage:,.2f}%`"
+        else:
+            response_14d_percentage = f"`{coin_14d_change_percentage:,.2f}%`"
+
+        if coin_30d_change_percentage > 0:
+            response_30d_percentage = f"`+{coin_30d_change_percentage:,.2f}%`"
+        else:
+            response_30d_percentage = f"`{coin_30d_change_percentage:,.2f}%`"
 
         my_embed = Embed(
             title="More info",
@@ -81,7 +92,12 @@ class PriceChange(Cog):
         my_embed.add_field(
             name="Change(7d %)", value=response_7d_percentage, inline=True
         )
-
+        my_embed.add_field(
+            name="Change(14d %)", value=response_14d_percentage, inline=True
+        )
+        my_embed.add_field(
+            name="Change(30d %)", value=response_30d_percentage, inline=True
+        )
         my_embed.set_footer(text=f"Source: coingecko.com")
 
         await interaction.followup.send(embed=my_embed)

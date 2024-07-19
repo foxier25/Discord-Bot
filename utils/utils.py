@@ -7,6 +7,18 @@ import json
 from constants import *
 
 
+def find_id_local(coin_symbol: str) -> Union[Dict, None]:
+    coin_symbol = coin_symbol.lower()
+
+    with open("coingecko/all_coins.json", "r") as f:
+        data = json.load(f)
+        for coin in data:
+            if coin["symbol"] == coin_symbol and "peg" not in coin["id"]:
+                return coin["id"]
+
+    return None
+
+
 def setup_logging() -> None:
     logger = logging.getLogger("")
     logger.setLevel(logging.INFO)
