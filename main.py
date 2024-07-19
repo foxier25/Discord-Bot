@@ -1,14 +1,74 @@
 import os
-from discord.ext import commands
-
+from discord.ext import commands, tasks
+import discord
 import requests
+from keep_alive import keep_alive
+from replit import db
 
-client = commands.Bot(command_prefix="!")
+intents = discord.Intents.default()
+intents.message_content = True
+
+client = commands.Bot(command_prefix="!", intents=intents)
 
 
 @client.event
 async def on_ready():
     print(f"You have logged in as {client.user}")
+
+
+@tasks.loop(minutes=60)
+async def update_database():
+    await client.wait_until_ready()  # without this it won't work
+    print("price-check-1h")
+
+    url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+    data = requests.get(url).json()
+    symbols = []
+
+    text_positive = "Next cryptocurrencies are up at least 10% in past hour:\n"
+    positive = False
+
+    text_negative = "Next cryptocurrencies are down at least 10% in past hour:\n"
+    negative = False
+
+    channel = client.get_channel(901822736693870623)  # channel price-alerts
+
+    for i in range(len(data)):
+        current_price = data[i]["current_price"]
+        symbol = data[i]["symbol"]
+
+        if symbol not in db.keys():
+            price_1h_ago = current_price
+            percentage = 0
+        else:
+            price_1h_ago = db[symbol]
+            percentage = ((float(current_price) / float(price_1h_ago)) - 1) * 100
+
+        db[symbol] = current_price
+        symbols.append(symbol)
+
+        if percentage > 10:
+            positive = True
+            text_positive += symbol + " +" + str(round(percentage, 2)) + "%\n"
+
+        if percentage < -10:
+            negative = True
+            text_negative += symbol + " " + str(round(percentage, 2)) + "%\n"
+
+    if positive:
+        print(text_positive)
+        await channel.send(text_positive)
+
+    if negative:
+        print(text_negative)
+        await channel.send(text_negative)
+
+    for key in db.keys():
+        if key not in symbols:
+            del db[key]
+
+
+update_database.start()
 
 
 @client.command()
@@ -21,10 +81,13 @@ async def price(ctx, symbol):
         if symbol.lower() == crypto["symbol"]:
             not_found = False
             current_price = crypto["current_price"]
+
             print("Current price of {} is {:,}".format(symbol.upper(), current_price))
+
             await ctx.send(
                 "Current price of {} is {:,}".format(symbol.uppper(), current_price)
             )
+            
     if not_found:
         await ctx.send("Either you sent wrong symbol or currency is not in top 100")
 
