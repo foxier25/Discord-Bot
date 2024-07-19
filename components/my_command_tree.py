@@ -6,6 +6,7 @@ from discord.app_commands import CommandTree, AppCommandError, CommandInvokeErro
 
 from utils import errors
 
+
 async def on_error(self, interaction: Interaction, error: AppCommandError) -> None:
     logging.exception(error)
 

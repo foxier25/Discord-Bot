@@ -1,14 +1,13 @@
 import os
 import discord
-
 from dotenv import load_dotenv
+from argparse import ArgumentParser
+import asyncio
+
 from constants import *
 from components import MyBot, MyCommandTree
-
-from argparse import ArgumentParser
 from utils import utils
 
-import asyncio
 
 async def main():
     load_dotenv()
@@ -24,7 +23,7 @@ async def main():
     parser.add_argument(
         "-t",
         "--test",
-        action="stor_true",
+        action="store_true",
         help="Providing console log instead of file log",
     )
     args = parser.parse_args()
@@ -37,6 +36,6 @@ async def main():
     await bot.start(TOKEN)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
