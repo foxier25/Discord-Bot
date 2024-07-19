@@ -58,6 +58,32 @@ async def bought(ctx, symbol, bought_price):
         await ctx.send("Either you sent wrong symbol or currency is not in top 100")
 
 
+@client.command()
+async def daychange(ctx, symbol):
+    url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+    data = requests.get(url).json()
+    not_found = True
+
+    for crypto in data:
+        if symbol.lower() == crypto["symbol"]:
+            not_found = False
+            day_change = crypto["price_change_24h"]
+            day_change_percentage = crypto["price_change_percentage_24h"]
+            print(
+                "24h change for {} is {}, which is {}%".format(
+                    symbol, day_change, day_change_percentage
+                )
+            )
+            await ctx.send(
+                "24h change for {} is {}, which is {}%".format(
+                    symbol, day_change, day_change_percentage
+                )
+            )
+
+    if not_found:
+        await ctx.send("Either you sent wrong symbol or currency is not in top 100")
+
+
 TOKEN = os.environ["TOKEN_SECRET"]
 
 client.run(TOKEN)
