@@ -3,10 +3,12 @@ import discord
 
 from dotenv import load_dotenv
 from constants import *
-from components import MyBot
+from components import MyBot, MyCommandTree
 
 from argparse import ArgumentParser
 from utils import utils
+
+import asyncio
 
 async def main():
     load_dotenv()
@@ -33,3 +35,8 @@ async def main():
 
     TOKEN = os.getenv("TOKEN")
     await bot.start(TOKEN)
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
