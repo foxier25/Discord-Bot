@@ -1,7 +1,6 @@
-import datetime as dt
-
 from aiohttp import ClientSession
 from typing import List
+import datetime as dt
 
 from discord import app_commands
 from discord import Interaction, Embed, Colour

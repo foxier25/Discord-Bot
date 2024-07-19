@@ -19,7 +19,6 @@ class Info(Cog):
 
     @app_commands.command(name="info", description="Basic information about the coin")
     @app_commands.describe(coin_symbol="Coin symbol")
-    
     async def info(self, interaction: Interaction, coin_symbol: str):
         await interaction.response.defer()
 

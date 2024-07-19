@@ -1,6 +1,17 @@
 from discord import Interaction, Embed, Colour
 
 
+async def api_problem(interaction: Interaction) -> None:
+    my_embed = Embed(colour=Colour.red())
+
+    my_embed.add_field(
+        name="⛔Problem with API",
+        value=f"We have a problem with API, please inform admin team",
+    )
+
+    await interaction.followup.send(embed=my_embed)
+
+
 async def coin_not_found(interaction: Interaction) -> None:
     my_embed = Embed(colour=Colour.red())
 
