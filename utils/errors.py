@@ -22,6 +22,16 @@ async def unexpected_error(interaction: Interaction) -> None:
     await interaction.followup.send(embed=my_embed)
 
 
+async def wrong_position_type(interaction: Interaction) -> None:
+    my_embed = Embed(colour=Colour.red())
+
+    my_embed.add_field(
+        name="⛔Wrong position type", value="Position type can be either buy or sell"
+    )
+
+    await interaction.followup.send(embed=my_embed)
+
+
 async def wrong_topn_number(interaction: Interaction) -> None:
     my_embed = Embed(colour=Colour.red())
 
